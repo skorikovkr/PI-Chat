@@ -65,6 +65,7 @@ namespace BlazorChat.Server
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
+                endpoints.MapHub<SignalRHub>("/signalRHub");
             });
         }
     }
