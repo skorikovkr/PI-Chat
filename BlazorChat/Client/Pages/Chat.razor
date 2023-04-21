@@ -1,0 +1,43 @@
+﻿@page "/chat/{ContactId}"
+@page "/chat"
+
+<div class="d-flex flex-grow-1 flex-row">
+
+    <MudPaper Elevation="25" Class="pa-3 ml-6" MinWidth="350px">
+
+
+            <div class="d-flex flex-column px-4" style="max-height:70vh;min-height:70vh; overflow:scroll;">
+              <MudList Clickable="true">
+              
+              </MudList> 
+            
+            </div>
+
+      </MudPaper>
+
+    <div class="d-flex flex-grow-1">
+    <MudPaper Elevation="25" Class="py-4 flex-grow-1">
+        <MudToolBar Dense="true">
+            @if (string.IsNullOrEmpty(ContactId))
+            {
+                <MudIcon Icon="@Icons.Material.Outlined.Person" Style="margin-right:10px"></MudIcon>
+                <MudText Typo="Typo.h6">диалог</MudText>
+            }
+            else
+            {
+                <MudIcon Icon="@Icons.Material.Outlined.ChatBubble" Style="margin-right:10px"></MudIcon>
+                <MudText Typo="Typo.h6">@ContactName</MudText>
+            }
+        </MudToolBar>
+
+        <MudPaper Elevation="25" Class="d-flex flex-row px-2 mx-4" Style="">
+            <MudTextField T="string" Placeholder="Введите сообщение..."DisableUnderLine="true" Class="mt-n2 mx-4"
+                          @bind-Value="CurrentMessage" For="@(()=> CurrentMessage)" />
+            <MudButton OnClick="SubmitAsync" StartIcon="@Icons.Material.Outlined.Send" Color="Color.Secondary" ButtonType="ButtonType.Button">Отправить</MudButton>
+        </MudPaper>
+    </MudPaper>
+    </div>
+
+</div>
+
+
