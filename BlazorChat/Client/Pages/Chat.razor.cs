@@ -12,7 +12,8 @@ namespace BlazorChat.Client.Pages
 {
     public partial class Chat
     {
-       
+        private string searchValue = "";
+        private string searchMessageValue = "";
         [CascadingParameter] public HubConnection hubConnection { get; set; }
         [Parameter] public string CurrentMessage { get; set; }
         [Parameter] public string CurrentUserId { get; set; }
@@ -41,7 +42,12 @@ namespace BlazorChat.Client.Pages
             }
         }
 
-
+        private string GetShortString(string text)
+        {
+            if (String.IsNullOrEmpty(text)) return "";
+            if (text.Length < 15) return text;
+            return text.Substring(0, 14) + "...";
+        }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await _jsRuntime.InvokeAsync<string>("ScrollToBottom", "chatContainer");

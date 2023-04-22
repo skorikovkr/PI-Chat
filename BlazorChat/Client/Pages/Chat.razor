@@ -4,9 +4,19 @@
 <div class="d-flex flex-grow-1 flex-row">
 
     <MudPaper Elevation="25" Class="pa-3 ml-6" MinWidth="350px">
+        <MudToolBar Dense="true">
+            <MudTextField T="string" Placeholder="Поиск пользователей" Class="pa-3 ml-6"
+                          @bind-Value="searchValue" Outlined="true" Icon="@Icons.Material.Outlined.Search"
+                          IconSize="Size.Medium" IconColor="Color.Secondary" />
+            <div class="d-flex align-items-center">
+                <MudIconButton Icon="@Icons.Material.Outlined.Search" Color="Color.Secondary" Size="Size.Medium"
+                               Class="mr-2" />
+            </div>
+        </MudToolBar>
+
         <div class="d-flex flex-column px-4" style="max-height:70vh;min-height:70vh; overflow:scroll;">
             <MudList Clickable="true">
-                @foreach (var user in ChatUsers)
+                @foreach (var user in ChatUsers.Where(u => u.UserName.ToLower().Contains(searchValue.ToLower())))
                 {
                     <MudListItem Class="pa-0 px-2" OnClick="@(() => LoadUserChat(user.Id))">
                         <div class="d-flex flex-row mt-n1 mb-n1">
@@ -23,8 +33,10 @@
                                 </MudBadge>
                             </div>
                             <div>
-                                <MudText Typo="Typo.body2" Class="mt-3 mb-n2">@user.UserName</MudText>
-                                
+                                <MudText Typo="Typo.body2" Class="mt-3 mb-n2">@user.UserName  @user.About</MudText>
+                                <MudText Typo="Typo.caption" Style="font-size: xx-small!important;">
+                                    @GetShortString(allMessages.Where(m => (user.Id == m.ToUserId) || user.Id == m.FromUserId).LastOrDefault()?.Message)
+                                </MudText>
                             </div>
                         </div>
                     </MudListItem>
@@ -51,10 +63,17 @@
                 <MudIcon Icon="@Icons.Material.Outlined.ChatBubble" Style="margin-right:10px"></MudIcon>
                 <MudText Typo="Typo.h6">@ContactName</MudText>
             }
+                <MudTextField T="string" Placeholder="Поиск сообщений" Class="pa-3 ml-6"
+                              @bind-Value="searchMessageValue" Outlined="true" Icon="@Icons.Material.Outlined.Search"
+                              IconSize="Size.Medium" IconColor="Color.Secondary" />
+                <div class="d-flex align-items-center">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Search" Color="Color.Secondary" Size="Size.Medium"
+                                   Class="mr-2" />
+                </div>
         </MudToolBar>
 
             <div class="d-flex flex-column px-4" style="max-height:65vh;min-height:65vh; overflow:scroll;" id="chatContainer">
-                @foreach (var message in messages)
+                @foreach (var message in messages.Where(m => m.Message.ToLower().Contains(searchMessageValue.ToLower())))
                 {
                     <div class="d-flex flex-row my-4 @(message.ToUserId == CurrentUserId ? "received" : "sent")">
                         <div class="mr-4">
