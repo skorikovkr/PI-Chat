@@ -4,16 +4,39 @@
 <div class="d-flex flex-grow-1 flex-row">
 
     <MudPaper Elevation="25" Class="pa-3 ml-6" MinWidth="350px">
+        <div class="d-flex flex-column px-4" style="max-height:70vh;min-height:70vh; overflow:scroll;">
+            <MudList Clickable="true">
+                @foreach (var user in ChatUsers)
+                {
+                    <MudListItem Class="pa-0 px-2" OnClick="@(() => LoadUserChat(user.Id))">
+                        <div class="d-flex flex-row mt-n1 mb-n1">
+                            <div class="mr-4">
+                                <MudBadge Class="my-2">
+                                    @if (user.Id == ContactId)
+                                    {
+                                        <MudAvatar Color="Color.Secondary" Style="height:50px; width:50px;">@user.UserName.ToUpper().FirstOrDefault()</MudAvatar>
+                                    }
+                                    else
+                                    {
+                                        <MudAvatar Color="Color.Dark" Style="height:50px; width:50px;">@user.UserName.ToUpper().FirstOrDefault()</MudAvatar>
+                                    }
+                                </MudBadge>
+                            </div>
+                            <div>
+                                <MudText Typo="Typo.body2" Class="mt-3 mb-n2">@user.UserName</MudText>
+                                
+                            </div>
+                        </div>
+                    </MudListItem>
+                }
+            </MudList>
 
+            <a href="@($"/Identity/Account/Manage/")">
+                <MudButton Color="Color.Primary" Variant="Variant.Outlined" style="border-radius: 10px;">Перейти в ваш профиль</MudButton>
+            </a>
 
-            <div class="d-flex flex-column px-4" style="max-height:70vh;min-height:70vh; overflow:scroll;">
-              <MudList Clickable="true">
-              
-              </MudList> 
-            
-            </div>
-
-      </MudPaper>
+        </div>
+    </MudPaper>
 
     <div class="d-flex flex-grow-1">
     <MudPaper Elevation="25" Class="py-4 flex-grow-1">
@@ -30,14 +53,40 @@
             }
         </MudToolBar>
 
+            <div class="d-flex flex-column px-4" style="max-height:65vh;min-height:65vh; overflow:scroll;" id="chatContainer">
+                @foreach (var message in messages)
+                {
+                    <div class="d-flex flex-row my-4 @(message.ToUserId == CurrentUserId ? "received" : "sent")">
+                        <div class="mr-4">
+                            <MudAvatar Color="Color.Secondary" Style="height:50px; width:50px;">@message.FromUser.UserName.ToUpper().FirstOrDefault()</MudAvatar>
+
+                        </div>
+                        <div>
+                            <MudText Typo="Typo.body1">@message.FromUser.UserName</MudText>
+                            <MudText Typo="Typo.caption" Style="font-size: xx-small!important;">@message.CreatedDate.ToString("dd MMM, yyyy hh:mm")</MudText>
+                            <MudText Typo="Typo.body2" Style=" padding: 15px;background-color: var(--mud-palette-background-grey);border-radius: 5px;margin-top:5px">@message.Message</MudText>
+                        </div>
+                    </div>
+                }
+            </div>
+
         <MudPaper Elevation="25" Class="d-flex flex-row px-2 mx-4" Style="">
             <MudTextField T="string" Placeholder="Введите сообщение..."DisableUnderLine="true" Class="mt-n2 mx-4"
                           @bind-Value="CurrentMessage" For="@(()=> CurrentMessage)" />
             <MudButton OnClick="SubmitAsync" StartIcon="@Icons.Material.Outlined.Send" Color="Color.Secondary" ButtonType="ButtonType.Button">Отправить</MudButton>
         </MudPaper>
+
     </MudPaper>
     </div>
 
 </div>
 
+<style>
+    .sent {
+        justify-content: flex-end;
+    }
 
+    .received {
+        justify-content: flex-start;
+    }
+</style>
